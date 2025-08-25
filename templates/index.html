@@ -1,0 +1,136 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <!-- Hero -->
+  <section class="py-5">
+    <div class="row align-items-center">
+      <div class="col-md-6">
+        <h1 class="display-5 fw-bold">Compassionate care, closer to home</h1>
+        <p class="lead text-muted">Afran General Hospital connects you with trusted doctors in Addis Ababa and beyond. Book appointments, access telehealth, and read health tips tailored for our community.</p>
+        <a href="#booking" class="btn btn-primary btn-lg">Book Appointment</a>
+      </div>
+      <div class="col-md-6 text-center">
+        <img src="https://images.unsplash.com/photo-1580281657521-9ae2d9d3b6b8?w=1200&h=800&fit=crop&auto=format" alt="Healthcare" class="img-fluid rounded shadow">
+      </div>
+    </div>
+  </section>
+
+  <!-- Services -->
+  <section class="py-5 bg-white rounded-3 shadow-sm">
+    <h2 class="h3 mb-4">Our Services</h2>
+    <div class="row g-3">
+      {% for service in services %}
+        <div class="col-md-4">
+          <div class="p-4 border rounded h-100">
+            <div class="fs-1">{{ service.icon }}</div>
+            <h5 class="mt-2">{{ service.title }}</h5>
+            <p class="text-muted">{{ service.description }}</p>
+          </div>
+        </div>
+      {% empty %}
+        <p class="text-muted">No services yet. Add some via the admin.</p>
+      {% endfor %}
+    </div>
+  </section>
+
+  <!-- Doctors -->
+  <section class="py-5">
+    <h2 class="h3 mb-4">Meet our Doctors</h2>
+    <div class="row g-3">
+      {% for doctor in doctors %}
+        <div class="col-md-4">
+          <div class="card h-100">
+            {% if doctor.photo_url %}
+              <img src="{{ doctor.photo_url }}" class="card-img-top" alt="{{ doctor.name }}">
+            {% endif %}
+            <div class="card-body">
+              <h5 class="card-title">{{ doctor.name }}</h5>
+              <p class="text-muted small">{{ doctor.specialty }} • {{ doctor.location }}</p>
+              <p class="card-text">{{ doctor.bio|truncatechars:120 }}</p>
+            </div>
+          </div>
+        </div>
+      {% empty %}
+        <p class="text-muted">No doctors yet. Add profiles via the admin.</p>
+      {% endfor %}
+    </div>
+  </section>
+
+  <!-- Testimonials -->
+  <section class="py-5 bg-white rounded-3 shadow-sm">
+    <h2 class="h3 mb-4">What patients say</h2>
+    <div class="row g-3">
+      {% for t in testimonials %}
+        <div class="col-md-4">
+          <div class="p-4 border rounded h-100">
+            <p class="mb-1">"{{ t.content|truncatechars:140 }}"</p>
+            <p class="small text-muted">— {{ t.patient_name }}, {{ t.location }}</p>
+          </div>
+        </div>
+      {% empty %}
+        <p class="text-muted">No testimonials yet.</p>
+      {% endfor %}
+    </div>
+  </section>
+
+  <!-- Blog -->
+  <section class="py-5">
+    <h2 class="h3 mb-4">From our Health Blog</h2>
+    <div class="row g-3">
+      {% for post in posts %}
+        <div class="col-md-4">
+          <div class="card h-100">
+            <div class="card-body">
+              <h5 class="card-title">{{ post.title }}</h5>
+              <p class="text-muted small">{{ post.published_at|date:'M d, Y' }}</p>
+              <p class="card-text">{{ post.excerpt|truncatechars:120 }}</p>
+              <a href="#" class="stretched-link">Read more</a>
+            </div>
+          </div>
+        </div>
+      {% empty %}
+        <p class="text-muted">No blog posts yet.</p>
+      {% endfor %}
+    </div>
+  </section>
+
+  <!-- Booking Form -->
+  <section id="booking" class="py-5 bg-white rounded-3 shadow-sm">
+    <h2 class="h3 mb-4">Book an Appointment</h2>
+    <form method="post" action="{% url 'book_appointment' %}" class="row g-3">
+      {% csrf_token %}
+      <div class="col-md-6">
+        {{ form.patient_name.label_tag }}
+        {{ form.patient_name }}
+      </div>
+      <div class="col-md-6">
+        {{ form.email.label_tag }}
+        {{ form.email }}
+      </div>
+      <div class="col-md-4">
+        {{ form.phone.label_tag }}
+        {{ form.phone }}
+      </div>
+      <div class="col-md-4">
+        {{ form.doctor.label_tag }}
+        {{ form.doctor }}
+      </div>
+      <div class="col-md-4">
+        {{ form.service.label_tag }}
+        {{ form.service }}
+      </div>
+      <div class="col-md-6">
+        {{ form.date_time.label_tag }}
+        {{ form.date_time }}
+      </div>
+      <div class="col-12">
+        {{ form.notes.label_tag }}
+        {{ form.notes }}
+      </div>
+      <div class="col-12">
+        <button class="btn btn-success">Request Appointment</button>
+      </div>
+    </form>
+  </section>
+
+{% endblock %}
